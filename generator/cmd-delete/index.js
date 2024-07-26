@@ -1,18 +1,22 @@
-const { Base, Wait, npmRootPath, fs, cli } = require('software-cli-api');
+const { Base, Wait, CLI, API } = require('software-cli-core');
 const { Util } = require('../../service/util');
 const { Lang } = require('../../service/lang');
+const CLIConfig = require('../../config/commands.json');
 
 Base.extends({
   init() {
     Base.state = {
       folderName: '',
       canDelete: false,
-      deleteFolder: ''
+      deleteFolder: '',
+      npmRootPath: null
     };
 
     Wait.next();
   },
   async prompt() {
+    const { data } = await API.cmd.asyncCmdExecuteResult('npm root -g', process.cwd());
+    Base.state.npmRootPath = data;
     const questions = [
       {
         type: 'input',
@@ -23,9 +27,9 @@ Base.extends({
           let commonValidate = Util.volidateFileName(input);
 
           if (commonValidate === true) {
-            let tempPath = fs.join(npmRootPath, 'software-cli', 'extensions', input);
+            let tempPath = API.fs.join(Base.state.npmRootPath, CLIConfig.packageName, 'extensions', input);
 
-            if (fs.hasPath(tempPath)) {
+            if (API.fs.hasPath(tempPath)) {
               Base.state.canDelete = true;
               Base.state.deleteFolder = tempPath;
               return true;
@@ -39,17 +43,15 @@ Base.extends({
       },
     ];
 
-    const answers = await cli.addQuestions(questions);
+    const answers = await CLI.addQuestions(questions);
     Base.state.folderName = answers.folderName;
     Wait.next();
   },
   writing() {
     if (Base.state.canDelete) {
-      cli.loading.start(Lang.BUILDIN.DELETE_COMMAND_TIPS);
-      fs.deleteFolder(Base.state.deleteFolder, true);
+      CLI.loading.start(Lang.BUILDIN.DELETE_COMMAND_TIPS);
+      API.fs.deleteFolder(Base.state.deleteFolder, true);
 
-      const CLIConfigPath = fs.join(npmRootPath, 'software-cli', 'config', 'commands.json');
-      let CLIConfig = fs.readFile(CLIConfigPath, true);
       const commands = CLIConfig.commands;
       const inAnyPath = CLIConfig.inAnyPath;
       let newCommands = [];
@@ -68,24 +70,25 @@ Base.extends({
       CLIConfig.commands = newCommands;
       CLIConfig.inAnyPath = newInAnyPath;
 
-      fs.writeFile(CLIConfigPath, CLIConfig, true);
+      const CLIConfigPath = API.fs.join(Base.state.npmRootPath, CLIConfig.packageName, 'config', 'commands.json');
+      API.fs.writeFile(CLIConfigPath, CLIConfig, true);
 
-      const pkgPath = fs.join(npmRootPath, 'software-cli', 'package.json');
-      let pkgConfig = fs.readFile(pkgPath, true);
+      const pkgPath = API.fs.join(Base.state.npmRootPath, CLIConfig.packageName, 'package.json');
+      let pkgConfig = API.fs.readFile(pkgPath, true);
       const scripts = pkgConfig.scripts;
       let debugName = `debug_${Base.state.folderName}`;
       delete scripts[debugName];
-      fs.writeFile(pkgPath, pkgConfig, true);
-      cli.loading.succeed(Lang.BUILDIN.DELETE_COMMAND_SUCCESS);
+      API.fs.writeFile(pkgPath, pkgConfig, true);
+      CLI.loading.succeed(Lang.BUILDIN.DELETE_COMMAND_SUCCESS);
     }
 
     Wait.next();
   },
   end() {
     if (!Base.state.canDelete) {
-      cli.log.error(Lang.BUILDIN.NO_THIS_FOLDER);
+      CLI.log.error(Lang.BUILDIN.NO_THIS_FOLDER);
     } else {
-      cli.log.success(Lang.MSG_SUCCESS, Lang.BUILDIN.DELETE_COMMAND_FLOW_SUCCESS);
+      CLI.log.success(Lang.MSG_SUCCESS, Lang.BUILDIN.DELETE_COMMAND_FLOW_SUCCESS);
     }
     Wait.next();
   }

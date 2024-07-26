@@ -1,14 +1,18 @@
-const { cli, fs } = require('software-cli-api');
-const cliConfig = require("../config/commands.json");
+const path = require('path');
+const { cli } = require('software-cli-core/src/cli');
 const { Lang } = require('../service/lang');
 
+const CLI = cli();
+
 function getCLIConfig() {
+    const CLIConfig = require("../config/commands.json");
+
     return {
-        wordsLen: cliConfig.wordsLen,
-        name: cliConfig.name,
-        commands: cliConfig.commands,
-        inAnyPath: cliConfig.inAnyPath,
-        buildIn: cliConfig.buildIn
+        wordsLen: CLIConfig.wordsLen,
+        name: CLIConfig.name,
+        commands: CLIConfig.commands,
+        inAnyPath: CLIConfig.inAnyPath,
+        buildIn: CLIConfig.buildIn
     };
 };
 
@@ -20,8 +24,8 @@ function showHelp(name, commands) {
 
     helpList.push(name + ' ' + Lang.HELP_MESSAGE);
     const helps = `Usage: ${name} [command] \nCommands:\n\t${helpList.join('\n\t')}`;
-    cli.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
-    cli.log.info(helps);
+    CLI.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
+    CLI.log.info(helps);
 
     process.exit(0);
 };
@@ -62,13 +66,13 @@ function validateCommand(option, name, commands) {
                     });
 
                     if (likes.length !== 0) {
-                        cli.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
-                        cli.log.error(Lang.MSG_ERROR, `${Lang.BUILDIN.NO_COMMAND} "${name} ${option}"`, `${Lang.BUILDIN.MEAN_SUCH}\n\t${likes.join('\n\t')}`);
+                        CLI.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
+                        CLI.log.error(Lang.MSG_ERROR, `${Lang.BUILDIN.NO_COMMAND} "${name} ${option}"`, `${Lang.BUILDIN.MEAN_SUCH}\n\t${likes.join('\n\t')}`);
                         process.exit();
                     }
                 } else {
-                    cli.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
-                    cli.log.error(Lang.MSG_ERROR, `${Lang.BUILDIN.NO_COMMAND} "${name} ${option}".`);
+                    CLI.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
+                    CLI.log.error(Lang.MSG_ERROR, `${Lang.BUILDIN.NO_COMMAND} "${name} ${option}".`);
                     process.exit();
                 }
                 break;
@@ -82,7 +86,7 @@ function validateCommand(option, name, commands) {
 };
 
 async function guideCommand() {
-    cli.loading.start(Lang.BUILDIN.CLI_VOLIDATING_CMD);
+    CLI.loading.start(Lang.BUILDIN.CLI_VOLIDATING_CMD);
     const { wordsLen, name, commands, inAnyPath, buildIn } = getCLIConfig();
     const currArgs = process.argv.slice(2);
     const cmdLen = currArgs.length;
@@ -93,9 +97,9 @@ async function guideCommand() {
     if (cmdLen <= wordsLen) {
         let cmdOptions = currArgs.join(' ');
 
-        let main = `../${fs.join('extensions', currArgs.join('-'), 'index.js')}`;
+        let main = `../${path.join('extensions', currArgs.join('-'), 'index.js')}`;
         if (buildIn.indexOf(cmdOptions) > -1) {
-            main = `../${fs.join('generator', currArgs.join('-'), 'index.js')}`;
+            main = `../${path.join('generator', currArgs.join('-'), 'index.js')}`;
         }
 
         const { exsited } = validateCommand(cmdOptions, name, commands);
@@ -109,16 +113,16 @@ async function guideCommand() {
                 inAnyPath
             });
             process.env['CLI_ENV'] = baseEnvConfig;
-            cli.loading.succeed(Lang.BUILDIN.CLI_VOLIDATE_CMD_SUCCESS);
+            CLI.loading.succeed(Lang.BUILDIN.CLI_VOLIDATE_CMD_SUCCESS);
             require(main);
         } else {
-            cli.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
-            cli.log.error(Lang.MSG_ERROR, `${Lang.BUILDIN.NO_COMMAND} "${name} ${currArgs.join(' ')}"`);
+            CLI.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
+            CLI.log.error(Lang.MSG_ERROR, `${Lang.BUILDIN.NO_COMMAND} "${name} ${currArgs.join(' ')}"`);
             process.exit();
         }
     } else {
-        cli.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
-        cli.log.error(Lang.MSG_ERROR, Lang.BUILDIN.COMMAND_LENGTH_TOO_LONG);
+        CLI.loading.succeed(Lang.BUILDIN.CLI_HAS_READY);
+        CLI.log.error(Lang.MSG_ERROR, Lang.BUILDIN.COMMAND_LENGTH_TOO_LONG);
         process.exit();
     }
 };

@@ -4,7 +4,7 @@
   "description": "软件开发基础命令行工具",
   "author": "gangdev",
   "license": "ISC",
-  "store": "http://taporb.com:10000/",
+  "store": "http://taporb.com:10000",
   "scripts": {
     "debug_cmd-create": "cross-env DEBUG_ENV=true sw cmd create",
     "debug_cmd-delete": "cross-env DEBUG_ENV=true sw cmd delete",
@@ -23,7 +23,7 @@
     "service"
   ],
   "dependencies": {
-    "software-cli-api": "^1.0.0",
+    "software-cli-core": "^1.0.12",
     "software-template": "^1.0.0"
   },
   "devDependencies": {

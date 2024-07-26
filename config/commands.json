@@ -37,7 +37,6 @@
   ],
   "buildIn": [
     "cmd create",
-    "cmd delete",
-    "obscure"
+    "cmd delete"
   ]
 }
