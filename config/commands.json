@@ -1,0 +1,43 @@
+{
+  "wordsLen": 2,
+  "packageName": "software-cli",
+  "name": "sw",
+  "commands": [
+    {
+      "command": "add project",
+      "description": "create project",
+      "custom": false
+    },
+    {
+      "command": "add view",
+      "description": "create page or component",
+      "custom": false
+    },
+    {
+      "command": "cmd create",
+      "description": "craete command",
+      "custom": false
+    },
+    {
+      "command": "cmd delete",
+      "description": "delete command",
+      "custom": false
+    },
+    {
+      "command": "obscure",
+      "description": "obscure javascropt and nodejs",
+      "custom": false
+    }
+  ],
+  "inAnyPath": [
+    "add project",
+    "cmd create",
+    "cmd delete",
+    "obscure"
+  ],
+  "buildIn": [
+    "cmd create",
+    "cmd delete",
+    "obscure"
+  ]
+}

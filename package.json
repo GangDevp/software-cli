@@ -1,0 +1,34 @@
+{
+  "name": "software-cli",
+  "version": "1.0.0",
+  "description": "软件开发基础命令行工具",
+  "author": "gangdev",
+  "license": "ISC",
+  "store": "http://taporb.com:10000/",
+  "scripts": {
+    "debug_cmd-create": "cross-env DEBUG_ENV=true sw cmd create",
+    "debug_cmd-delete": "cross-env DEBUG_ENV=true sw cmd delete",
+    "debug_obscure": "cross-env DEBUG_ENV=true sw obscure",
+    "debug_add-project": "cross-env DEBUG_ENV=true sw add project",
+    "debug_add-view": "cross-env DEBUG_ENV=true sw add view"
+  },
+  "bin": {
+    "sw": "./bin/base.js"
+  },
+  "files": [
+    "bin",
+    "config",
+    "generator",
+    "extensions",
+    "service"
+  ],
+  "dependencies": {
+    "software-cli-api": "^1.0.0",
+    "software-template": "^1.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "uglify-es": "^3.3.9"
+  },
+  "type": "commonjs"
+}
