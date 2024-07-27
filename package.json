@@ -1,6 +1,6 @@
 {
   "name": "software-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "软件开发基础命令行工具",
   "author": "gangdev",
   "license": "ISC",
@@ -23,7 +23,7 @@
     "service"
   ],
   "dependencies": {
-    "software-cli-core": "^1.0.14",
+    "software-cli-core": "^1.0.15",
     "software-template": "^1.0.0"
   },
   "devDependencies": {
