@@ -1,5 +1,5 @@
 const path = require('path');
-const { cli } = require('software-cli-core/src/cli');
+const cli = require('software-cli-core/src/cli');
 const { Lang } = require('../service/lang');
 
 const CLI = cli();
