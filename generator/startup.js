@@ -1,8 +1,6 @@
 const path = require('path');
-const cli = require('software-cli-core/src/cli');
+const { CLI } = require('software-cli-core');
 const { Lang } = require('../service/lang');
-
-const CLI = cli();
 
 function getCLIConfig() {
     const CLIConfig = require("../config/commands.json");

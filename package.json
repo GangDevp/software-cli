@@ -1,6 +1,6 @@
 {
   "name": "software-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "软件开发基础命令行工具",
   "author": "gangdev",
   "license": "ISC",
@@ -27,8 +27,7 @@
     "software-template": "^1.0.0"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "uglify-es": "^3.3.9"
+    "cross-env": "^7.0.3"
   },
   "type": "commonjs"
 }
